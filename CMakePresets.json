@@ -1,0 +1,37 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Kitware/CMake/master/Help/manual/presets/schema.json",
+	"version": 9,
+	"cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 30
+	},
+	"configurePresets": [
+		{
+			"name": "default",
+			"generator": "Ninja Multi-Config",
+			"binaryDir": "build",
+			"cacheVariables": {
+				"CMAKE_EXPORT_COMPILE_COMMANDS": true,
+				"CMAKE_CONFIGURATION_TYPES": "Debug;Release"
+			}
+		}
+	],
+	"buildPresets": [
+		{
+			"name": "default",
+			"hidden": true,
+			"configurePreset": "default",
+			"jobs": 8
+		},
+		{
+			"name": "rel",
+			"inherits": ["default"],
+			"configuration": "Release"
+		},
+		{
+			"name": "dbg",
+			"inherits": ["default"],
+			"configuration": "Debug"
+		}
+	]
+}
