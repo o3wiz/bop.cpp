@@ -10,10 +10,9 @@ template <typename Op> struct BindRHS
 	template <typename T, typename Proj = std::identity> //
 	constexpr auto operator()(const T &rhs, Proj proj = {}) const
 	{
-		return [rhs, proj](const auto &lhs) { return Op{}(std::invoke(proj, lhs), rhs); };
+		return [&rhs, proj](const auto &lhs) { return Op{}(std::invoke(proj, lhs), rhs); };
 	}
 };
-
 
 // Comparisons
 inline constexpr BindRHS<std::less<>> lt{};
