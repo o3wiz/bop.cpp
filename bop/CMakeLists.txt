@@ -1,5 +1,5 @@
 set(HDRS
-	"include/Bop.hpp"
+	"include/bop/Bop.hpp"
 )
 
 add_library(bop INTERFACE ${HDRS})
