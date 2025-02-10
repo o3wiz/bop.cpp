@@ -5,37 +5,44 @@
 namespace bop
 {
 
-template <typename Op> struct BindRHS
+template <typename Op> struct BinFunctor
 {
-	template <typename T, typename Proj = std::identity> //
-	constexpr auto operator()(const T &rhs, Proj proj = {}) const
+	template <typename T, class Proj = std::identity> //
+	constexpr auto operator()(const T &rhs, Proj proj) const
 	{
 		return [&rhs, proj](const auto &lhs) { return Op{}(std::invoke(proj, lhs), rhs); };
+	}
+
+	template <class Proj = std::identity> //
+	constexpr auto operator()(Proj proj) const
+	{
+		return
+			[proj](const auto &lhs, const auto &rhs) { return Op{}(std::invoke(proj, lhs), std::invoke(proj, rhs)); };
 	}
 };
 
 // Comparisons
-inline constexpr BindRHS<std::less<>> lt{};
-inline constexpr BindRHS<std::less_equal<>> le{};
-inline constexpr BindRHS<std::greater<>> gt{};
-inline constexpr BindRHS<std::greater_equal<>> ge{};
-inline constexpr BindRHS<std::equal_to<>> eq{};
-inline constexpr BindRHS<std::not_equal_to<>> ne{};
+inline constexpr BinFunctor<std::less<>> lt{};
+inline constexpr BinFunctor<std::less_equal<>> le{};
+inline constexpr BinFunctor<std::greater<>> gt{};
+inline constexpr BinFunctor<std::greater_equal<>> ge{};
+inline constexpr BinFunctor<std::equal_to<>> eq{};
+inline constexpr BinFunctor<std::not_equal_to<>> ne{};
 
 // Arithmetic operations
-inline constexpr BindRHS<std::plus<>> add{};
-inline constexpr BindRHS<std::minus<>> sub{};
-inline constexpr BindRHS<std::multiplies<>> mul{};
-inline constexpr BindRHS<std::divides<>> div{};
-inline constexpr BindRHS<std::modulus<>> mod{};
+inline constexpr BinFunctor<std::plus<>> add{};
+inline constexpr BinFunctor<std::minus<>> sub{};
+inline constexpr BinFunctor<std::multiplies<>> mul{};
+inline constexpr BinFunctor<std::divides<>> div{};
+inline constexpr BinFunctor<std::modulus<>> mod{};
 
 // Logical operations
-inline constexpr BindRHS<std::logical_and<>> land{};
-inline constexpr BindRHS<std::logical_or<>> lor{};
+inline constexpr BinFunctor<std::logical_and<>> land{};
+inline constexpr BinFunctor<std::logical_or<>> lor{};
 
 // Bitwise operations
-inline constexpr BindRHS<std::bit_and<>> band{};
-inline constexpr BindRHS<std::bit_or<>> bor{};
-inline constexpr BindRHS<std::bit_xor<>> bxor{};
+inline constexpr BinFunctor<std::bit_and<>> band{};
+inline constexpr BinFunctor<std::bit_or<>> bor{};
+inline constexpr BinFunctor<std::bit_xor<>> bxor{};
 
 } // namespace bop
